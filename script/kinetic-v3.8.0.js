@@ -272,7 +272,13 @@ Kinetic.Node.prototype = {
         while (parent.className !== "Stage") {
             x += parent.x;
             y += parent.y;
+            console.log("parent " +parent.getName());
             parent = parent.parent;
+            console.log("parent is? " +parent.getName());
+            console.log("x " +x);
+            console.log("px " +parent.x);
+            console.log("y " +y);
+            console.log("py " +parent.y);
         }
         return {
             x: x,

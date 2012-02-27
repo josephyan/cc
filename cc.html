@@ -3,86 +3,67 @@
     <link rel="stylesheet" type="text/css" href="style/cc.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script src="script/kinetic-v3.8.0.js"></script>
-    <script src="script/panel.js"></script>
-    <script>
-        const FPS = 30;
-        var battle_field_canvas = null;
-        var battle_field_context2D = null;
-        var panel_canvas = null;
-        var panel_context2d = null;
-        
-        var bug_img = new Image();
-        bug_img.src = "img/fat_bird_50x50.png";
-        
-        var ds_img = new Image();
-        ds_img.src = "img/fat_bird_50x50.png";
-        
-        var bug_pos_x = 0;
-        var bug_pos_y = 0;
-        var bug_val_x = 64;
-        var bug_val_y = 0;
-        
-        var ds_pos_x = 0;
-        var ds_pos_y = 0;
-        
-        var direction = null;
-        
-        
-        window.onload = init;
-        function init(){   
-            var sources = {
-                background: "img/background.png",
-                ds: "img/what_did_i_read.png",
-                ds_glow: "img/what_did_i_read_glow.png",
-                ds_na: "img/what_did_i_read_na.png",
-            };
-            loadKitchen(sources, initKitchen);
-            
-            //battle_field_canvas = document.getElementById("battle_field_canvas"),
-            //battle_field_context2D = battle_field_canvas.getContext("2d");
-
-            //panel_canvas = document.getElementById("panel_canvas"),
-            //panel_context2D = panel_canvas.getContext("2d");
-            //draw_panel();
-            //setInterval (draw, 1000);
-        }
-        
-        function draw(){ 
-            battle_field_context2D.clearRect(0, 0, battle_field_canvas.width, battle_field_canvas.height);
-            battle_field_context2D.drawImage(bug_img, bug_pos_x, bug_pos_y);
-            walk();
-        }
-        
-        function walk(){
-            direction = findDirection();
-            console.log(bug_pos_x);
-            if (direction === "right" && bug_pos_x < 704){
-                bug_pos_x = bug_pos_x + bug_val_x;
-            }
-            else{
-                bug_pos_x = bug_pos_x;
-            }
-        }
-        
-        function findDirection(){
-            return "right";
-        }
-        
-        function draw_panel(){
-            panel_context2D.clearRect(0, 0, panel_canvas.width, panel_canvas.height);
-            //panel_context2D.drawImage(ds_img, ds_pos_x, ds_pos_y);
-        }
-    </script>
+    <script src="script/meme.js"></script>
+    <script src="script/enemy.js"></script>
+    <script src="script/background.js"></script>    
 </head>
 <body>
-    <div id="main">
-        <!--<div id="battle_field">
-            <canvas id="battle_field_canvas", width="768", height="640"></canvas>
-        </div>
+    <div id="main"></div>
+  
+    <script>
+    var stage = new Kinetic.Stage("main", 1024, 640);
+    var layer = new Kinetic.Layer();
+    var enemy_layer = new Kinetic.Layer();
+    var meme_layer = new Kinetic.Layer();
+    var running = false;
+    var debug = true;
+    var recalculate = false;
+    
+    var matrix = new Array(12);
+    for (var i = 0; i < 12; i++) {
+        matrix[i] = new Array(10);
+        for (var j = 0; j < 10; j++) {
+            matrix[i][j] = "empty";
+            console.log("creating metrix");
+        }
+    }
+    matrix[0][0] = "reserved";
+    matrix[11][9] = "reserved";
+    
+    window.onload = init;
+    function init(){
+        var sources = {
+            background: "img/background.png",
+        };
+        var memes = {
+            lol: "img/lol.png",
+            lol_glow: "img/lol_glow.png",
+            lol_na: "img/lol_na.png",
+            wdir: "img/what_did_i_read.png",
+            wdir_glow: "img/what_did_i_read_glow.png",
+            wdir_na: "img/what_did_i_read_na.png",
+        };
+        var enemies = {
+            derpina: "img/derpina.png",
+        }
+        //var canvas= layer.getCanvas();
+        //var context = layer.getContext();
+        var current_enemy = null;
+        var coordinate = null;
+        var direction = null;
+        var dieId = null;
         
-        <div id="panel">
-            <canvas id="panel_canvas", width="256", height="640"></canvas>
-        </div>-->
-    </div>
+
+        loadBackground(sources);
+        loadMeme(memes);
+        loadEnemy(enemies);
+        
+        stage.add(layer);
+        stage.add(meme_layer);
+        stage.add(enemy_layer);
+    }
+
+    </script>
+
 </body>
 </html>
