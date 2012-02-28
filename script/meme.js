@@ -28,6 +28,7 @@ var box = new Kinetic.Shape(function(){
     context.fillText("Souls: " +souls, 790, 37);
 });
 
+var meme_army = [];
 
 function loadMeme(sources){
     console.log("Loading Meme.......");
@@ -102,28 +103,44 @@ function add(meme_image, glow_meme_image, meme_coordinate){
         var grid_position = {};
         grid_position.x = Math.round(position.x/64) ;
         grid_position.y = Math.round(position.y/64) ;
-        console.log("gride x is " +grid_position.x);
-        console.log("gride y is " +grid_position.y);
+        console.log("grid x is " +grid_position.x);
+        console.log("grid y is " +grid_position.y);
 
         if( grid_position.x > 11 || grid_position.y > 9||grid_position.x<0||grid_position.y<0)
-        {
-            console.log("huh")
+        {   
+            console.log("can't put meme outside battlefield");
             meme.x = meme_coordinate.x;
             meme.y = meme_coordinate.y;
         }
         else{
             if( matrix[grid_position.x ][grid_position.y]==="empty" ){
-                console.log("meme added!");
                 matrix[grid_position.x][grid_position.y] = "taken";
-                meme.x = grid_position.x * 64 + 4;
-                meme.y = grid_position.y * 64 + 4;
-                meme.draggable(false);
-                souls = souls -50;
-                addMeme(meme_image, glow_meme_image, meme_coordinate);
-                recalculate = true;
+                current_enemy = enemy_layer.getChildren();
+                var coordinate = current_enemy[0].getPosition();
+                var enemyx = Math.round(coordinate.x/64) ;
+                var enemyy = Math.round(coordinate.y/64) ;
+                initForPathFinding();
+                var istherepath =findPath(enemyx,enemyy);
+                console.log("path? " +istherepath);
+                if(istherepath===false){
+                    matrix[grid_position.x][grid_position.y] = "empty";
+                    console.log("Why you blocking all pass??!!")
+                    meme.x = meme_coordinate.x;
+                    meme.y = meme_coordinate.y;
+                }
+                else{
+                    matrix[grid_position.x][grid_position.y] = "taken";
+                    meme.x = grid_position.x * 64 + 4;
+                    meme.y = grid_position.y * 64 + 4;
+                    meme.draggable(false);
+                    souls = souls -50;
+                    addMeme(meme_image, glow_meme_image, meme_coordinate);
+                    recalculate = true;
+                    meme_army[meme_army.length] = {x:grid_position.x, y:grid_position.y};
+                }
             }
             else{
-                console.log("huh")
+                console.log("spot already taken")
                 meme.x = meme_coordinate.x;
                 meme.y = meme_coordinate.y;
             }
@@ -147,15 +164,54 @@ function add(meme_image, glow_meme_image, meme_coordinate){
     meme_layer.draw();
 }
 
-
-function isNearOutline(meme, outline){
-    var a = animal;
-    var o = outline;
-    if (a.x > o.x - 20 && a.x < o.x + 20 && a.y > o.y - 20 && a.y < o.y + 20) {
-        return true;
-    }
-    else {
-        return false;
-    }
+function detect(i){
+    if(meme_army.length >0){
+        console.log("detecting");
+        x = meme_army[i].x;
+        y = meme_army[i].y;
+    //if(x === 0 && y<9 && y>0){ //left bar
+        if( matrix[x+1][y+1]==="walking")
+            shot(x, y, x+1, y+1);
+        else if(matrix[x][y+1]==="walking")
+            shot(x, y, x, y+1);
+        else if(matrix[x-1][y-1]==="walking")
+            shot(x, y, x-1, y-1);
+        else if(matrix[x+1][y]==="walking")
+            shot(x, y, x+1, y);
+        else if(matrix[x+1][y-1]==="walking")
+            shot(x, y, x+1, y-1);
+        else if(matrix[x][y-1]==="walking")
+            shot(x, y, x, y-1);
+        else if(matrix[x-1][y]==="walking")
+            shot(x, y, x-1, y);
+        else if(matrix[x-1][y-1]==="walking")
+            shot(x, y, x-1, y-1);
+        else
+            stage.stop();
+            //}
+     }
 }
+
+function shot(ox, oy, dx, dy){
+    stage.start();
+    console.log("lol lol lol lol");
+    /*Add score board
+    var lol = new Kinetic.Shape(function(){
+        var context = this.getContext();
+        context.font = "12pt Calibri";
+        context.fillStyle = "red";
+        context.fillText("lol", ox*64, oy*64);
+    });*/
+    //bullet_layer.add(lol);
+    //bullet_layer.draw();
+    //setInterval(loling, 100);
+    //setTimeout(loling, 1000);
+    //lol.move(
     
+}
+
+function loling(){
+    current_lol = bullet_layer.getChildren();
+    current_lol[0].move(5,5);
+    bullet_layer.draw();
+}

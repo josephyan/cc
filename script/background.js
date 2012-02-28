@@ -61,6 +61,7 @@ function initBackground(images){
                 window.clearInterval(i);
             }
             running = false;
+            //stage.stop();
         }
         var fill = this.getFill() == "red" ? "#00d00f" : "red";
         this.setFill(fill);

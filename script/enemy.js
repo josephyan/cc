@@ -1,7 +1,22 @@
-var open_list = [];
-var close_list = [];
 var path = [];
 var current_enemy = null;
+
+var open_list = new Array(12);
+for (var i = 0; i < 12; i++) {
+    open_list[i] = new Array(10);
+    for (var j = 0; j < 10; j++) {
+         open_list[i][j] = false;
+    }
+}
+var close_list = new Array(12);
+for (var i = 0; i < 12; i++) {
+    close_list[i] = new Array(10);
+    for (var j = 0; j < 10; j++) {
+         close_list[i][j] = false;
+    }
+}
+current_node_x = 0;
+current_node_y = 0;
 
 function loadEnemy(sources){
     console.log("Loading Enemy.......");
@@ -26,7 +41,7 @@ function loadEnemy(sources){
 function initEnemy(images){
     var enemies = {
         derpina: {
-            x: -60,
+            x: 4,
             y: 4
         },
     };
@@ -48,34 +63,69 @@ function initEnemy(images){
 }
 
 function runEnemy(){
+    initEnemyRun();
     console.log("Running");
+    setInterval(moveEnemy, 500);
+}
+
+function initEnemyRun(){
+    for (var i = 0; i < 12; i++) {
+        open_list[i] = new Array(10);
+        for (var j = 0; j < 10; j++) {
+            open_list[i][j] = false;
+        }
+    }
+    for (var i = 0; i < 12; i++) {
+        close_list[i] = new Array(10);
+        for (var j = 0; j < 10; j++) {
+             close_list[i][j] = false;
+        }
+    }    
     current_enemy = enemy_layer.getChildren();
-    
     var coordinate = current_enemy[0].getPosition();
     var x = Math.round(coordinate.x/64) ;
     var y = Math.round(coordinate.y/64) ;
-    console.log("Derp, I'm here, X: " +x);
-    console.log("Derp, I'm here, Y: " +y);
-    addToOpenList(x,y);
-    addToCloseList(0);
+    addToOpenList(x, y, x, y);
+    addToCloseList(x, y);
+    current_node_x = x;
+    current_node_y = y;
     findPath(x,y);
     printTrace(x,y, 11, 9);
-    setInterval(moveEnemy, 100);
-    //findDirection(current_enemy[0]);
-    //move(current_enemy[0]);
-    //enemy_layer.draw();
+}
+
+function initForPathFinding(){
+    for (var i = 0; i < 12; i++) {
+        open_list[i] = new Array(10);
+        for (var j = 0; j < 10; j++) {
+            open_list[i][j] = false;
+        }
+    }
+    for (var i = 0; i < 12; i++) {
+        close_list[i] = new Array(10);
+        for (var j = 0; j < 10; j++) {
+             close_list[i][j] = false;
+        }
+    }
+    current_enemy = enemy_layer.getChildren();
+    var coordinate = current_enemy[0].getPosition();
+    var x = Math.round(coordinate.x/64);
+    var y = Math.round(coordinate.y/64);
+    addToOpenList(x, y, x, y);
+    addToCloseList(x, y);
+    current_node_x = x;
+    current_node_y = y;
 }
 
 function moveEnemy(){
     //findDirection(current_enemy[0]);
     if (recalculate === true){
-        open_list = [];
-        close_list = [];
+        //open_list = [];
+        //close_list = [];
         path = [];
         var coordinate = current_enemy[0].getPosition();
         var x = Math.round(coordinate.x/64) ;
         var y = Math.round(coordinate.y/64) ;
-        findPath(x,y);
+        //findPath(x,y);
         printTrace(x,y, 11, 9);
         recalculate === false;
     }
@@ -86,32 +136,35 @@ function moveEnemy(){
 function move(enemy){
     var x = (path[1].x-path[0].x)*64;
     var y = (path[1].y-path[0].y)*64;
+    if(path[0].x!==-1){
+        matrix[path[1].x][path[1].y] = "walking";
+        matrix[path[0].x][path[0].y] = "empty";
+    }
+    detect(0);
     enemy.move(x, y);
     path.splice(0,1);
     console.log("path length is: " +path.length);
     if (path.length === 1)
         foreverAlone();
-    /*if (direction === "right")
-        enemy.move(64, 0);
-    else
-        enemy.move(0, 64);*/
-    
 }
-
 function findPath(x,y){
     if (x === 11 && y ===9){
         console.log("path found");
-        for(var i =0; i <close_list.length; i++){
-            console.log("Step: " +i +" Path: " +close_list[i].x +" " +close_list[i].y);
-        }
         return true;
     }
     else{
         //find openspot and add them to the openlist
         findOpen(x, y);
         //find the shortest F on openlist and move it to closed list
-        findShortest();
-        findPath(close_list[close_list.length-1].x, close_list[close_list.length-1].y);
+        //no path avaiable if search same node on close list twice
+        //or open list is empty, but still no path avaiable
+        if (findShortest()=== false){
+            console.log("no path found")
+            return false;
+        }
+        else{
+            return findPath(current_node_x, current_node_y);
+        }
     }
 }
 
@@ -129,14 +182,7 @@ function printTrace(ox, oy, dx, dy){
     }
     else{
         path[path.length] = {x:dx, y:dy};
-        //find it on closed list
-        var i = findOnCloseList(dx, dy);
-        if(debug === true){
-            console.log("finding on close list: " +close_list[i].x +" " +close_list[i].y);
-            console.log("the p values are: " +close_list[i].px +" " +close_list[i].py);
-            console.log("what is i: " +i);
-        }
-        printTrace(ox, oy, close_list[i].px, close_list[i].py);
+        printTrace(ox, oy, close_list[dx][dy].px, close_list[dx][dy].py);
     }
 }
 
@@ -150,20 +196,32 @@ function findOnCloseList(x, y){
         }
     }
 }
-
 function findShortest(){
-    var min_f = open_list[0].h+open_list[0].g;
+    var min_f = 1000;
     var min_i = 0;
+    var min_j = 0;
     var current_f = 0;
-    for(var i = 0; i<open_list.length; i++){
-        currentf = open_list[i].h + open_list[i].g;
-        if(current_f < min_f){
-            min_f = current_f;
-            min_i = i;
+    for(var i = 0; i< 12; i++){
+        for(var j = 0; j<10; j++){
+            if (open_list[i][j] !== false){
+                current_f = open_list[i][j].h+open_list[i][j].g;
+                if(current_f < min_f){
+                    min_f = current_f;
+                    min_i = i;
+                    min_j = j;
+                }
+            }
         }
     }
-    addToCloseList(min_i);
+    if (min_f !== 1000){
+        addToCloseList(min_i, min_j);
+        return true;
+    }
+    else{
+        return false;
+    }
 }
+
 function findOpen(x, y){
     //check souranding
     //check if it's on openlist
@@ -304,92 +362,50 @@ function findOpen(x, y){
     }
 }
 
-function notOnOpenList(x, y){    
-    var length = open_list.length;
-    for (var i=0; i < length; i++){
-        if( x=== open_list[i].x && y === open_list[i].y)
-            return false;
-    }
-    return true;
+function notOnOpenList(x, y){
+    if(open_list[x][y] === false)
+        return true;
+    else
+        return false;
 }
 
 function notOnCloseList(x, y){
-    var length = close_list.length;
-    for (var i=0; i < length; i++){
-        if( x=== close_list[i].x && y === close_list[i].y)
-            return false;
-    }
-    return true;
+    if(close_list[x][y] === false)
+        return true;
+    else
+        return false;
 }
 
 function addToOpenList(tempx, tempy, parentx, parenty){
-    var parentNode = findMeOnCloseList(parentx, parenty);
-    if (debug === true){
-        console.log("Add me to openlist: " +tempx +" " +tempy);
-    }
-    if(close_list.length ===0){
-        var temph = 11 - tempx + 9 - tempy;
-        open_list[open_list.length] ={
-            x : tempx,
-            y : tempy,
-            px : parentx,
-            py : parenty,
-            g : 0,
-            h : temph
-        };
-    }
-    else{
-        var tempg = close_list[parentNode].g;
-        var temph = 11 - tempx + 9 - tempy;
-        open_list[open_list.length] ={
-            x : tempx,
-            y : tempy,
+    var temph = 11 - tempx + 9 - tempy;
+    if(tempx === parentx && tempy === parenty){
+        open_list[tempx][tempy]={
             px: parentx,
             py: parenty,
-            g : tempg + 1,
-            h : temph
-        };
-        if (debug ===true){
-            console.log("adding openlist x " +open_list[open_list.length-1].x);
-            console.log("adding openlist y " +open_list[open_list.length-1].y);
-            console.log("adding openlist g " +open_list[open_list.length-1].g);
-            console.log("adding openlist h " +open_list[open_list.length-1].h);
+            g: 0,
+            h: temph
         }
     }
-}
-
-function addToCloseList(i){
-    if(debug === true){
-        console.log("adding me to close list: " +open_list[i].x +" " +open_list[i].y);
-    }
-    close_list[close_list.length] ={
-            px: open_list[i].px,
-            py: open_list[i].py,
-            x : open_list[i].x,
-            y : open_list[i].y,
-            g : open_list[i].g,
-            h : open_list[i].h
+    else{
+        open_list[tempx][tempy]={
+            px: parentx,
+            py: parenty,
+            g: close_list[parentx][parenty].g+1,
+            h: temph
         };
-     open_list.splice(i, 1);
-}
-function findMeOnOpenList(tempx, tempy){
-    if(debug === true){
-        console.log("let's try to find on open list: " +tempx +" " +tempy);
-    }
-    for(var i=0; i<open_list.length; i++){
-        if(tempx === open_list[i].x && tempy === open_list[i].y)
-            return i;
     }
 }
 
-function findMeOnCloseList(tempx, tempy){
-    if(debug === true){
-        console.log("let's try to find on close list: " +tempx +" " +tempy);
-    }
-    for(var i=0; i<close_list.length; i++){
-        if(tempx === close_list[i].x && tempy === close_list[i].y)
-            return i;
-    }
+function addToCloseList(x, y){
+     close_list[x][y] = {
+        px: open_list[x][y].px,
+        py: open_list[x][y].py,
+        g: open_list[x][y].g,
+        h: open_list[x][y].h
+     };
+     current_node_x = x;
+     current_node_y = y;
+     open_list[x][y] = false;
 }
 
 function foreverAlone(){

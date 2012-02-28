@@ -15,16 +15,17 @@
     var layer = new Kinetic.Layer();
     var enemy_layer = new Kinetic.Layer();
     var meme_layer = new Kinetic.Layer();
+    var bullet_layer = new Kinetic.Layer();
     var running = false;
     var debug = true;
     var recalculate = false;
     
+    console.log("creating metrix");
     var matrix = new Array(12);
     for (var i = 0; i < 12; i++) {
         matrix[i] = new Array(10);
         for (var j = 0; j < 10; j++) {
             matrix[i][j] = "empty";
-            console.log("creating metrix");
         }
     }
     matrix[0][0] = "reserved";
@@ -58,9 +59,36 @@
         loadMeme(memes);
         loadEnemy(enemies);
         
+        var lol = new Kinetic.Shape(function(){
+            var context = this.getContext();
+            context.font = "12pt Calibri";
+            context.fillStyle = "red";
+            context.fillText("lol", 64, 64);
+        });
+        var lol2 = new Kinetic.Shape(function(){
+            var context = this.getContext();
+            context.font = "12pt Calibri";
+            context.fillStyle = "red";
+            context.fillText("lol", 128, 128);
+        });
+        bullet_layer.add(lol);
+        bullet_layer.add(lol2);
         stage.add(layer);
+        stage.add(bullet_layer);
         stage.add(meme_layer);
         stage.add(enemy_layer);
+        
+        var amplitude = 150;
+        var period = 5000; // in ms
+        var centerX = stage.width / 2;
+            
+        stage.onFrame(function(frame){
+            lol.x = lol.x + 0.1;//amplitude * Math.sin(frame.time * 2 * Math.PI / period) + centerX;
+            lol.y = lol.y;
+            lol2.y = amplitude * Math.sin(frame.time * 2 * Math.PI / period) + centerX;
+            bullet_layer.draw();
+            //console.log(frame.time);
+        });
     }
 
     </script>
