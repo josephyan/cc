@@ -55,10 +55,11 @@ function initBackground(images){
         if( running === false){
             runEnemy();
             running = true;
+            //stage.start();
         }
         else{
             for (var i = 1; i < 99999; i++){
-                window.clearInterval(i);
+                window.clearTimeout(i);
             }
             running = false;
             //stage.stop();

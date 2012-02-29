@@ -15,8 +15,12 @@ for (var i = 0; i < 12; i++) {
          close_list[i][j] = false;
     }
 }
-current_node_x = 0;
-current_node_y = 0;
+var current_node_x = 0;
+var current_node_y = 0;
+
+var move_counter = 64;
+
+var id = null;
 
 function loadEnemy(sources){
     console.log("Loading Enemy.......");
@@ -57,15 +61,11 @@ function initEnemy(images){
             enemy.x = enemies[key].x;
             enemy.y = enemies[key].y;
             enemy_layer.add(enemy);
+            enemy.hide();
         })();
     }
     enemy_layer.draw();
-}
-
-function runEnemy(){
     initEnemyRun();
-    console.log("Running");
-    setInterval(moveEnemy, 500);
 }
 
 function initEnemyRun(){
@@ -80,8 +80,10 @@ function initEnemyRun(){
         for (var j = 0; j < 10; j++) {
              close_list[i][j] = false;
         }
-    }    
+    }
+    path = [];
     current_enemy = enemy_layer.getChildren();
+    current_enemy[0].show();
     var coordinate = current_enemy[0].getPosition();
     var x = Math.round(coordinate.x/64) ;
     var y = Math.round(coordinate.y/64) ;
@@ -91,6 +93,7 @@ function initEnemyRun(){
     current_node_y = y;
     findPath(x,y);
     printTrace(x,y, 11, 9);
+    matrix[x][y] =="walking";
 }
 
 function initForPathFinding(){
@@ -114,39 +117,50 @@ function initForPathFinding(){
     addToCloseList(x, y);
     current_node_x = x;
     current_node_y = y;
+    matrix[x][y]="walking";
 }
 
-function moveEnemy(){
-    //findDirection(current_enemy[0]);
-    if (recalculate === true){
-        //open_list = [];
-        //close_list = [];
-        path = [];
-        var coordinate = current_enemy[0].getPosition();
-        var x = Math.round(coordinate.x/64) ;
-        var y = Math.round(coordinate.y/64) ;
-        //findPath(x,y);
-        printTrace(x,y, 11, 9);
-        recalculate === false;
-    }
-    move(current_enemy[0]);
-    enemy_layer.draw();
-}
+function runEnemy(){
+    var i = path.length -1;
+    var j = path.length -2;
+    var x = path[j].x - path[i].x;
+    var y = path[j].y - path[i].y;
 
-function move(enemy){
-    var x = (path[1].x-path[0].x)*64;
-    var y = (path[1].y-path[0].y)*64;
-    if(path[0].x!==-1){
-        matrix[path[1].x][path[1].y] = "walking";
-        matrix[path[0].x][path[0].y] = "empty";
+    if(move_counter === 64){
+        if (recalculate === true){
+            console.log("recalculating");
+            path = [];
+            var coordinate = current_enemy[0].getPosition();
+            var x = Math.round(coordinate.x/64) ;
+            var y = Math.round(coordinate.y/64) ;
+            printTrace(x,y, 11, 9);
+            recalculate = false;
+        }
+        else{
+            matrix[path[j].x][path[j].y] = "walking";
+            matrix[path[i].x][path[i].y] = "empty";
+            path.pop();
+            move_counter = 1;
+            if (path.length === 1)
+                foreverAlone();
+            move(x, y);
+        }
+    }    
+    else{
+        move_counter = move_counter + 1;
+        move(x, y);
     }
     detect(0);
-    enemy.move(x, y);
-    path.splice(0,1);
-    console.log("path length is: " +path.length);
-    if (path.length === 1)
-        foreverAlone();
+    id = setTimeout(runEnemy, 10);
 }
+
+function move(x, y){
+    current_enemy = enemy_layer.getChildren();
+    current_enemy[0].move(x, y);
+    enemy_layer.draw();
+    return true;
+}
+
 function findPath(x,y){
     if (x === 11 && y ===9){
         console.log("path found");
@@ -171,7 +185,8 @@ function findPath(x,y){
 function printTrace(ox, oy, dx, dy){
     if (ox === dx && oy ===dy){
         path[path.length] = {x:dx, y:dy};
-        path.reverse();
+        path[path.length] = {x:dx, y:dy};
+        //path.reverse();
         if(debug === true){
            console.log("here is your trace");
         }
@@ -226,7 +241,7 @@ function findOpen(x, y){
     //check souranding
     //check if it's on openlist
     //if not, add
-    console.log("Trying to find open for: " +x +" " +y);
+    //console.log("Trying to find open for: " +x +" " +y);
     if (x=== -1 && y === 0){    //starting
         addToOpenList(0,0,-1,0);
     }
@@ -409,9 +424,10 @@ function addToCloseList(x, y){
 }
 
 function foreverAlone(){
-    for (var i = 1; i < 99999; i++){
-        window.clearInterval(i);
-    }
+    //for (var i = 1; i < 99999; i++){
+    console.log("id" +id);
+        clearTimeout(id);
+    //}
     died_image = new Image();
     died_image.onload = function(){
         loadForeverAlone(died_image);
