@@ -18,31 +18,20 @@
     var running = false;
     var debug = true;
     var recalculate = false;
+    const width = 12;
+    const height = 10;
     
     console.log("creating metrix");
-    var matrix = new Array(12);
-    for (var i = 0; i < 12; i++) {
-        matrix[i] = new Array(10);
-        for (var j = 0; j < 10; j++) {
+    var matrix = new Array(width);
+    for (var i = 0; i < width; i++) {
+        matrix[i] = new Array(height);
+        for (var j = 0; j < height; j++) {
             matrix[i][j] = "empty";
         }
     }
     matrix[0][0] = "reserved";
-    matrix[11][9] = "reserved";
-/*    
-        var lol = new Kinetic.Shape(function(){
-            var context = this.getContext();
-            context.font = "14pt Calibri";
-            context.fillStyle = "red";
-            context.fillText("LOL LOL LOL", 0, 0);
-        });
-        var lol2 = new Kinetic.Shape(function(){
-            var context = this.getContext();
-            context.font = "14pt Calibri";
-            context.fillStyle = "red";
-            context.fillText("LOL LOL LOL", 0, 0);
-        });
-*/    
+    matrix[width-1][height-1] = "reserved";
+
     window.onload = init;
     function init(){
         var sources = {
@@ -70,10 +59,6 @@
         loadMeme(memes);
         loadEnemy(enemies);
         
-//        lol.hide();
-//        lol2.hide();
-//        meme_layer.add(lol);
-//        meme_layer.add(lol2);
         stage.add(layer);
         stage.add(meme_layer);
         stage.add(enemy_layer);

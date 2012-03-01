@@ -18,9 +18,9 @@ for (var i = 0; i < 12; i++) {
 var current_node_x = 0;
 var current_node_y = 0;
 
-var move_counter = 64;
-
+var move_counter = 32;
 var id = null;
+var life = 100;
 
 function loadEnemy(sources){
     console.log("Loading Enemy.......");
@@ -126,7 +126,13 @@ function runEnemy(){
     var x = path[j].x - path[i].x;
     var y = path[j].y - path[i].y;
 
-    if(move_counter === 64){
+    if(life === 0)
+    {
+        current_enemy = enemy_layer.getChildren();
+        //enemy_layer.remove(current_enemy[0]);
+        enemy_layer.draw();
+    }
+    else if(move_counter === 32){
         if (recalculate === true){
             console.log("recalculating");
             path = [];
@@ -150,13 +156,13 @@ function runEnemy(){
         move_counter = move_counter + 1;
         move(x, y);
     }
-    detect(0);
-    id = setTimeout(runEnemy, 10);
+    detect();
+    id = setTimeout(runEnemy, 40);
 }
 
 function move(x, y){
     current_enemy = enemy_layer.getChildren();
-    current_enemy[0].move(x, y);
+    current_enemy[0].move(x*2, y*2);
     enemy_layer.draw();
     return true;
 }
@@ -426,7 +432,7 @@ function addToCloseList(x, y){
 function foreverAlone(){
     //for (var i = 1; i < 99999; i++){
     console.log("id" +id);
-        clearTimeout(id);
+       clearTimeout(id);
     //}
     died_image = new Image();
     died_image.onload = function(){

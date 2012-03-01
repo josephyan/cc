@@ -207,189 +207,15 @@ function detect(){
     var lol2 = null;
     var name1 = null;
     var name2 = null;
+     meme_layer.draw();
     for(var i = 0; i < 12; i++){
         for(var j = 0; j < 10; j++){
             if(meme_army[i][j]===true){
                 //console.log("detecting");
                 x = i;
                 y = j;
-                        name1 = "1"+"m"+x+y;
-                        name2 = "2"+"m"+x+y;
-                        //find the lol objects among all children
-                        for (var k = 0; k < current_meme.length; k++){
-                            if(current_meme[k].name === name1)
-                                lol1 = current_meme[k];
-                            if(current_meme[k].name === name2)
-                                lol2 = current_meme[k];
-                        }
-                
-                if(x === 0 && y<9 && y>0){ //left bar
-                    if( matrix[x+1][y+1]==="walking"){
-                        shot(x, y, x+1, y+1);
-                    }
-                    else if(matrix[x][y+1]==="walking"){
-                        shot(x, y, x, y+1);
-                    }
-                    else if(matrix[x+1][y]==="walking"){
-                        shot(x, y, x+1, y);
-                    }
-                    else if(matrix[x+1][y-1]==="walking"){
-                        shot(x, y, x+1, y-1);
-                    }
-                    else if(matrix[x][y-1]==="walking"){
-                        shot(x, y, x, y-1);
-                    }
-                    else{
-                        lol1.hide();
-                        lol2.hide();
-                        //console.log("not detected");
-                        meme_layer.draw();
-                    }
-                } 
-                else if(y === 0 && x<11 && x>0){ //top bar
-                    if( matrix[x+1][y+1]==="walking"){
-                        shot(x, y, x+1, y+1);
-                    }
-                    else if(matrix[x][y+1]==="walking"){
-                        shot(x, y, x, y+1);
-                    }
-                    else if(matrix[x+1][y]==="walking"){
-                        shot(x, y, x+1, y);
-                    }
-                    else if(matrix[x-1][y]==="walking"){
-                        shot(x, y, x-1, y);
-                    }
-                    else if(matrix[x-1][y+1]==="walking"){
-                        shot(x, y, x-1, y+1);
-                    }
-                    else{
-                        lol1.hide();
-                        lol2.hide();
-                        //console.log("not detected");
-                        meme_layer.draw();
-                    }
-                }     
-                else if(x === 11 && y<9 && y>0){ //right bar
-                    if(matrix[x][y+1]==="walking"){
-                        shot(x, y, x, y+1);
-                    }
-                    else if(matrix[x-1][y-1]==="walking"){
-                        shot(x, y, x-1, y-1);
-                    }
-                    else if(matrix[x][y-1]==="walking"){
-                        shot(x, y, x, y-1);
-                    }
-                    else if(matrix[x-1][y]==="walking"){
-                        shot(x, y, x-1, y);
-                    }
-                    else if(matrix[x-1][y+1]==="walking"){
-                        shot(x, y, x-1, y+1);
-                    }
-                    else{
-                        lol1.hide();
-                        lol2.hide();
-                        //console.log("not detected");
-                        meme_layer.draw();
-                    }
-                }     
-                else if(y === 9 && x<11 && x>0){ //bottom bar
-                    if(matrix[x-1][y-1]==="walking"){
-                        shot(x, y, x-1, y-1);
-                    }
-                    else if(matrix[x+1][y]==="walking"){
-                        shot(x, y, x+1, y);
-                    }
-                    else if(matrix[x+1][y-1]==="walking"){
-                        shot(x, y, x+1, y-1);
-                    }
-                    else if(matrix[x][y-1]==="walking"){
-                        shot(x, y, x, y-1);
-                    }
-                    else if(matrix[x-1][y]==="walking"){
-                        shot(x, y, x-1, y);
-                    }
-                    else{
-                        lol1.hide();
-                        lol2.hide();
-                        //console.log("not detected");
-                        meme_layer.draw();
-                    }
-                }
-                else if(x === 0 && y===9){ //bottom left corner
-                    if(matrix[x+1][y]==="walking"){
-                        shot(x, y, x+1, y);
-                    }
-                    else if(matrix[x+1][y-1]==="walking"){
-                        shot(x, y, x+1, y-1);
-                    }
-                    else if(matrix[x][y-1]==="walking"){
-                        shot(x, y, x, y-1);
-                    }
-                    else{
-                        lol1.hide();
-                        lol2.hide();
-                        //console.log("not detected");
-                        meme_layer.draw();
-                    }
-                }
-                else if(x === 11 && y===0){ //top right corner
-                    if(matrix[x][y+1]==="walking"){
-                        shot(x, y, x, y+1);
-                    }
-                    else if(matrix[x-1][y]==="walking"){
-                        shot(x, y, x-1, y);
-                    }
-                    else if(matrix[x-1][y+1]==="walking"){
-                        shot(x, y, x-1, y+1);
-                    }
-                    else{
-                        lol1.hide();
-                        lol2.hide();
-                        //console.log("not detected");
-                        meme_layer.draw();
-                    }
-                } 
-                else{ //general
-                    if( matrix[x+1][y+1]==="walking"){
-                        shot(x, y, x+1, y+1);
-                    }
-                    else if(matrix[x][y+1]==="walking"){
-                        shot(x, y, x, y+1);
-                    }
-                    else if(matrix[x-1][y-1]==="walking"){
-                        shot(x, y, x-1, y-1);
-                    }
-                    else if(matrix[x+1][y]==="walking"){
-                        shot(x, y, x+1, y);
-                    }
-                    else if(matrix[x+1][y-1]==="walking"){
-                        shot(x, y, x+1, y-1);
-                    }
-                    else if(matrix[x][y-1]==="walking"){
-                        shot(x, y, x, y-1);
-                    }
-                    else if(matrix[x-1][y]==="walking"){
-                        shot(x, y, x-1, y);
-                    }
-                    else if(matrix[x-1][y+1]==="walking"){
-                        shot(x, y, x-1, y+1);
-                    }
-                    else{
-                        lol1.hide();
-                        lol2.hide();
-                        //console.log("not detected");
-                        meme_layer.draw();
-                    }
-                }
-            }
-        }
-    }
-}
-
-function shot(ox, oy, dx, dy){
-console.log("lol");
-                name1 = "1"+"m"+ox+oy;
-                name2 = "2"+"m"+ox+oy;
+                name1 = "1"+"m"+x+y;
+                name2 = "2"+"m"+x+y;
                 //find the lol objects among all children
                 for (var k = 0; k < current_meme.length; k++){
                     if(current_meme[k].name === name1)
@@ -397,16 +223,192 @@ console.log("lol");
                     if(current_meme[k].name === name2)
                         lol2 = current_meme[k];
                 }
-                lol1.x = ox*64+32;
-                lol1.y = oy*64+32;
-                lol2.x = ox*64+32;
-                lol2.y = oy*64+32;
-                lol1.moveToTop();
-                lol2.moveToTop();
                 
+                if(x === 0 && y<9 && y>0){ //left bar
+                    if( matrix[x+1][y+1]==="walking"){
+                        shot(x, y, x+1, y+1, lol1, lol2);
+                    }
+                    else if(matrix[x][y+1]==="walking"){
+                        shot(x, y, x, y+1, lol1, lol2);
+                    }
+                    else if(matrix[x+1][y]==="walking"){
+                        shot(x, y, x+1, y, lol1, lol2);
+                    }
+                    else if(matrix[x+1][y-1]==="walking"){
+                        shot(x, y, x+1, y-1, lol1, lol2);
+                    }
+                    else if(matrix[x][y-1]==="walking"){
+                        shot(x, y, x, y-1, lol1, lol2);
+                    }
+                    else{
+                        lol1.hide();
+                        lol2.hide();
+                        //console.log("not detected");
+                        //meme_layer.draw();
+                    }
+                } 
+                else if(y === 0 && x<11 && x>0){ //top bar
+                    if( matrix[x+1][y+1]==="walking"){
+                        shot(x, y, x+1, y+1, lol1, lol2);
+                    }
+                    else if(matrix[x][y+1]==="walking"){
+                        shot(x, y, x, y+1, lol1, lol2);
+                    }
+                    else if(matrix[x+1][y]==="walking"){
+                        shot(x, y, x+1, y, lol1, lol2);
+                    }
+                    else if(matrix[x-1][y]==="walking"){
+                        shot(x, y, x-1, y, lol1, lol2);
+                    }
+                    else if(matrix[x-1][y+1]==="walking"){
+                        shot(x, y, x-1, y+1, lol1, lol2);
+                    }
+                    else{
+                        lol1.hide();
+                        lol2.hide();
+                        //console.log("not detected");
+                        //meme_layer.draw();
+                    }
+                }     
+                else if(x === 11 && y<9 && y>0){ //right bar
+                    if(matrix[x][y+1]==="walking"){
+                        shot(x, y, x, y+1, lol1, lol2);
+                    }
+                    else if(matrix[x-1][y-1]==="walking"){
+                        shot(x, y, x-1, y-1, lol1, lol2);
+                    }
+                    else if(matrix[x][y-1]==="walking"){
+                        shot(x, y, x, y-1, lol1, lol2);
+                    }
+                    else if(matrix[x-1][y]==="walking"){
+                        shot(x, y, x-1, y, lol1, lol2);
+                    }
+                    else if(matrix[x-1][y+1]==="walking"){
+                        shot(x, y, x-1, y+1, lol1, lol2);
+                    }
+                    else{
+                        lol1.hide();
+                        lol2.hide();
+                        //console.log("not detected");
+                        //meme_layer.draw();
+                    }
+                }     
+                else if(y === 9 && x<11 && x>0){ //bottom bar
+                    if(matrix[x-1][y-1]==="walking"){
+                        shot(x, y, x-1, y-1, lol1, lol2);
+                    }
+                    else if(matrix[x+1][y]==="walking"){
+                        shot(x, y, x+1, y, lol1, lol2);
+                    }
+                    else if(matrix[x+1][y-1]==="walking"){
+                        shot(x, y, x+1, y-1, lol1, lol2);
+                    }
+                    else if(matrix[x][y-1]==="walking"){
+                        shot(x, y, x, y-1, lol1, lol2);
+                    }
+                    else if(matrix[x-1][y]==="walking"){
+                        shot(x, y, x-1, y, lol1, lol2);
+                    }
+                    else{
+                        lol1.hide();
+                        lol2.hide();
+                        //console.log("not detected");
+                        //meme_layer.draw();
+                    }
+                }
+                else if(x === 0 && y===9){ //bottom left corner
+                    if(matrix[x+1][y]==="walking"){
+                        shot(x, y, x+1, y, lol1, lol2);
+                    }
+                    else if(matrix[x+1][y-1]==="walking"){
+                        shot(x, y, x+1, y-1, lol1, lol2);
+                    }
+                    else if(matrix[x][y-1]==="walking"){
+                        shot(x, y, x, y-1, lol1, lol2);
+                    }
+                    else{
+                        lol1.hide();
+                        lol2.hide();
+                        //console.log("not detected");
+                        //meme_layer.draw();
+                    }
+                }
+                else if(x === 11 && y===0){ //top right corner
+                    if(matrix[x][y+1]==="walking"){
+                        shot(x, y, x, y+1, lol1, lol2);
+                    }
+                    else if(matrix[x-1][y]==="walking"){
+                        shot(x, y, x-1, y, lol1, lol2);
+                    }
+                    else if(matrix[x-1][y+1]==="walking"){
+                        shot(x, y, x-1, y+1, lol1, lol2);
+                    }
+                    else{
+                        lol1.hide();
+                        lol2.hide();
+                        //console.log("not detected");
+                        //meme_layer.draw();
+                    }
+                } 
+                else{ //general
+                    if( matrix[x+1][y+1]==="walking"){
+                        shot(x, y, x+1, y+1, lol1, lol2);
+                    }
+                    else if(matrix[x][y+1]==="walking"){
+                        shot(x, y, x, y+1, lol1, lol2);
+                    }
+                    else if(matrix[x-1][y-1]==="walking"){
+                        shot(x, y, x-1, y-1, lol1, lol2);
+                    }
+                    else if(matrix[x+1][y]==="walking"){
+                        shot(x, y, x+1, y, lol1, lol2);
+                    }
+                    else if(matrix[x+1][y-1]==="walking"){
+                        shot(x, y, x+1, y-1, lol1, lol2);
+                    }
+                    else if(matrix[x][y-1]==="walking"){
+                        shot(x, y, x, y-1, lol1, lol2);
+                    }
+                    else if(matrix[x-1][y]==="walking"){
+                        shot(x, y, x-1, y, lol1, lol2);
+                    }
+                    else if(matrix[x-1][y+1]==="walking"){
+                        shot(x, y, x-1, y+1, lol1, lol2);
+                    }
+                    else{
+                        lol1.hide();
+                        lol2.hide();
+                        //console.log("not detected");
+                        //meme_layer.draw();
+                    }
+                }
+               
+            }
+        }
+    }
+}
+
+function shot(ox, oy, dx, dy, lol1, lol2){
+/*    //console.log("lol");
+    name1 = "1"+"m"+ox+oy;
+    name2 = "2"+"m"+ox+oy;
+    //find the lol objects among all children
+    for (var k = 0; k < current_meme.length; k++){
+        if(current_meme[k].name === name1)
+            lol1 = current_meme[k];
+        if(current_meme[k].name === name2)
+            lol2 = current_meme[k];
+    }*/
+    life = life - 20;
+    lol1.x = ox*64+32;
+    lol1.y = oy*64+32;
+    lol2.x = ox*64+32;
+    lol2.y = oy*64+32;
+    lol1.moveToTop();
+    lol2.moveToTop();
     lol1.show();
     lol2.show();
     lol1.rotate(Math.PI / 12);
     lol2.rotate(Math.PI / 8);
-    meme_layer.draw();
+    
 }
