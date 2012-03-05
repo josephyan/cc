@@ -30,10 +30,10 @@ var box = new Kinetic.Shape(function(){
 
 //var meme_army = [];
 
-var meme_army = new Array(12);
-for (var i = 0; i < 12; i++) {
-    meme_army[i] = new Array(10);
-    for (var j = 0; j < 10; j++) {
+var meme_army = new Array(width);
+for (var i = 0; i < width; i++) {
+    meme_army[i] = new Array(height);
+    for (var j = 0; j < height; j++) {
          meme_army[i][j] = false;
     }
 }
@@ -115,7 +115,7 @@ function add(meme_image, glow_meme_image, meme_coordinate){
         console.log("grid x is " +grid_position.x);
         console.log("grid y is " +grid_position.y);
 
-        if( grid_position.x > 11 || grid_position.y > 9||grid_position.x<0||grid_position.y<0)
+        if( grid_position.x > width-1 || grid_position.y > height-1||grid_position.x<0||grid_position.y<0)
         {   
             console.log("can't put meme outside battlefield");
             meme.x = meme_coordinate.x;
@@ -208,8 +208,8 @@ function detect(){
     var name1 = null;
     var name2 = null;
      meme_layer.draw();
-    for(var i = 0; i < 12; i++){
-        for(var j = 0; j < 10; j++){
+    for(var i = 0; i < width; i++){
+        for(var j = 0; j < height; j++){
             if(meme_army[i][j]===true){
                 //console.log("detecting");
                 x = i;
@@ -224,7 +224,7 @@ function detect(){
                         lol2 = current_meme[k];
                 }
                 
-                if(x === 0 && y<9 && y>0){ //left bar
+                if(x === 0 && y<height-1 && y>0){ //left bar
                     if( matrix[x+1][y+1]==="walking"){
                         shot(x, y, x+1, y+1, lol1, lol2);
                     }
@@ -247,7 +247,7 @@ function detect(){
                         //meme_layer.draw();
                     }
                 } 
-                else if(y === 0 && x<11 && x>0){ //top bar
+                else if(y === 0 && x<width-1 && x>0){ //top bar
                     if( matrix[x+1][y+1]==="walking"){
                         shot(x, y, x+1, y+1, lol1, lol2);
                     }
@@ -270,7 +270,7 @@ function detect(){
                         //meme_layer.draw();
                     }
                 }     
-                else if(x === 11 && y<9 && y>0){ //right bar
+                else if(x === width-1 && y<height-1 && y>0){ //right bar
                     if(matrix[x][y+1]==="walking"){
                         shot(x, y, x, y+1, lol1, lol2);
                     }
@@ -293,7 +293,7 @@ function detect(){
                         //meme_layer.draw();
                     }
                 }     
-                else if(y === 9 && x<11 && x>0){ //bottom bar
+                else if(y === height-1 && x<width-1 && x>0){ //bottom bar
                     if(matrix[x-1][y-1]==="walking"){
                         shot(x, y, x-1, y-1, lol1, lol2);
                     }
@@ -316,7 +316,7 @@ function detect(){
                         //meme_layer.draw();
                     }
                 }
-                else if(x === 0 && y===9){ //bottom left corner
+                else if(x === 0 && y===height-1){ //bottom left corner
                     if(matrix[x+1][y]==="walking"){
                         shot(x, y, x+1, y, lol1, lol2);
                     }
@@ -333,7 +333,7 @@ function detect(){
                         //meme_layer.draw();
                     }
                 }
-                else if(x === 11 && y===0){ //top right corner
+                else if(x === width-1 && y===0){ //top right corner
                     if(matrix[x][y+1]==="walking"){
                         shot(x, y, x, y+1, lol1, lol2);
                     }

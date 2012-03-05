@@ -1,17 +1,17 @@
 var path = [];
 var current_enemy = null;
 
-var open_list = new Array(12);
-for (var i = 0; i < 12; i++) {
-    open_list[i] = new Array(10);
-    for (var j = 0; j < 10; j++) {
+var open_list = new Array(width);
+for (var i = 0; i < width; i++) {
+    open_list[i] = new Array(height);
+    for (var j = 0; j < height; j++) {
          open_list[i][j] = false;
     }
 }
-var close_list = new Array(12);
-for (var i = 0; i < 12; i++) {
-    close_list[i] = new Array(10);
-    for (var j = 0; j < 10; j++) {
+var close_list = new Array(width);
+for (var i = 0; i < width; i++) {
+    close_list[i] = new Array(height);
+    for (var j = 0; j < height; j++) {
          close_list[i][j] = false;
     }
 }
@@ -69,15 +69,15 @@ function initEnemy(images){
 }
 
 function initEnemyRun(){
-    for (var i = 0; i < 12; i++) {
-        open_list[i] = new Array(10);
-        for (var j = 0; j < 10; j++) {
+    for (var i = 0; i < width; i++) {
+        //open_list[i] = new Array(height);
+        for (var j = 0; j < height; j++) {
             open_list[i][j] = false;
         }
     }
-    for (var i = 0; i < 12; i++) {
-        close_list[i] = new Array(10);
-        for (var j = 0; j < 10; j++) {
+    for (var i = 0; i < width; i++) {
+        //close_list[i] = new Array(10);
+        for (var j = 0; j < height; j++) {
              close_list[i][j] = false;
         }
     }
@@ -92,20 +92,20 @@ function initEnemyRun(){
     current_node_x = x;
     current_node_y = y;
     findPath(x,y);
-    printTrace(x,y, 11, 9);
+    printTrace(x,y, width-1, height-1);
     matrix[x][y] =="walking";
 }
 
 function initForPathFinding(){
-    for (var i = 0; i < 12; i++) {
-        open_list[i] = new Array(10);
-        for (var j = 0; j < 10; j++) {
+    for (var i = 0; i < width; i++) {
+        //open_list[i] = new Array(10);
+        for (var j = 0; j < height; j++) {
             open_list[i][j] = false;
         }
     }
-    for (var i = 0; i < 12; i++) {
-        close_list[i] = new Array(10);
-        for (var j = 0; j < 10; j++) {
+    for (var i = 0; i < width; i++) {
+        //close_list[i] = new Array(10);
+        for (var j = 0; j < height; j++) {
              close_list[i][j] = false;
         }
     }
@@ -156,7 +156,7 @@ function runEnemy(){
         move_counter = move_counter + 1;
         move(x, y);
     }
-    detect();
+    setTimeout(detect, 20);
     id = setTimeout(runEnemy, 40);
 }
 
@@ -168,7 +168,7 @@ function move(x, y){
 }
 
 function findPath(x,y){
-    if (x === 11 && y ===9){
+    if (x === width-1 && y ===height-1){
         console.log("path found");
         return true;
     }
@@ -222,8 +222,8 @@ function findShortest(){
     var min_i = 0;
     var min_j = 0;
     var current_f = 0;
-    for(var i = 0; i< 12; i++){
-        for(var j = 0; j<10; j++){
+    for(var i = 0; i< width; i++){
+        for(var j = 0; j<height; j++){
             if (open_list[i][j] !== false){
                 current_f = open_list[i][j].h+open_list[i][j].g;
                 if(current_f < min_f){
@@ -263,7 +263,7 @@ function findOpen(x, y){
                 addToOpenList(x,y+1, x, y);
         }
     }
-    else if(x===11 && y===0){ //top right corner
+    else if(x===width-1 && y===0){ //top right corner
         if(matrix[x-1][y] !== "taken")
         {
             if(notOnOpenList(x-1,y)&&notOnCloseList(x-1,y))
@@ -275,7 +275,7 @@ function findOpen(x, y){
                 addToOpenList(x,y+1, x, y);
         }
     }
-    else if(x===0 && y===9){ //bottom left corner
+    else if(x===0 && y===height-1){ //bottom left corner
         if(matrix[x+1][y] !== "taken")
         {
             if(notOnOpenList(x+1,y)&&notOnCloseList(x+1,y))
@@ -287,11 +287,11 @@ function findOpen(x, y){
                 addToOpenList(x,y-1, x, y);
         }
     }
-    else if(x===11 && y===9){
+    else if(x===width-1 && y===height-1){
         //search is done
         console.log("search should be done");
     }
-    else if(x===0 && y < 9 && y > 0){ //left bar
+    else if(x===0 && y < height-1 && y > 0){ //left bar
         if(matrix[x+1][y] !== "taken")
         {
             if(notOnOpenList(x+1,y)&&notOnCloseList(x+1,y))
@@ -308,7 +308,7 @@ function findOpen(x, y){
                 addToOpenList(x,y-1, x, y);
         }
     }
-    else if(y===0 && x < 11 && x > 0){ //top bar
+    else if(y===0 && x < width-1 && x > 0){ //top bar
         if(matrix[x+1][y] !== "taken")
         {
             if(notOnOpenList(x+1,y)&&notOnCloseList(x+1,y))
@@ -325,7 +325,7 @@ function findOpen(x, y){
                 addToOpenList(x-1,y, x, y);
         }
     }
-    else if(x===11 && y < 9 && y > 0){ //right bar
+    else if(x===width-1 && y < height-1 && y > 0){ //right bar
         if(matrix[x-1][y] !== "taken")
         {
             if(notOnOpenList(x-1,y)&&notOnCloseList(x-1,y))
@@ -342,7 +342,7 @@ function findOpen(x, y){
                 addToOpenList(x,y+1, x, y);
         }
     }
-    else if(y===9 && x < 11 && x > 0){ //bottom bar
+    else if(y===height-1 && x < width-1 && x > 0){ //bottom bar
         if(matrix[x-1][y] !== "taken")
         {
             if(notOnOpenList(x-1,y)&&notOnCloseList(x-1,y))
@@ -398,7 +398,7 @@ function notOnCloseList(x, y){
 }
 
 function addToOpenList(tempx, tempy, parentx, parenty){
-    var temph = 11 - tempx + 9 - tempy;
+    var temph = width-1 - tempx + height-1 - tempy;
     if(tempx === parentx && tempy === parenty){
         open_list[tempx][tempy]={
             px: parentx,
