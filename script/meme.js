@@ -14,7 +14,7 @@ var souls = 100;
 var box = new Kinetic.Shape(function(){
     var context = this.getContext();
     context.beginPath();
-    context.rect(780, 5, 130, 50);
+    context.rect(width*64+5, 5, 130, 50);
     context.lineWidth = 4;
     context.strokeStyle = "black";
     context.fillStyle = "yellow";
@@ -25,7 +25,7 @@ var box = new Kinetic.Shape(function(){
     // add text
     context.font = "18pt Calibri";
     context.fillStyle = "black";
-    context.fillText("Souls: " +souls, 790, 37);
+    context.fillText("Souls: " +souls, width*64+10, 37);
 });
 
 //var meme_army = [];
@@ -40,15 +40,14 @@ for (var i = 0; i < width; i++) {
 
 function loadMeme(sources){
     console.log("Loading Meme.......");
-    
     var memes = {
         lol: {
-            x: 775,
-            y: 66
+            x: width*64+2,
+            y: 64+2
         },
         wdir: {
-            x: 770,
-            y: 130
+            x: width*64+2,
+            y: 64*2+2
         },
     };
     
